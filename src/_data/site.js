@@ -5,6 +5,6 @@ export default {
   links: [
     { name: "GitHub", url: "https://github.com/greenbrettmichael" },
     { name: "LinkedIn", url: "https://www.linkedin.com/in/brett-michael-green/" },
-    { name: "X", url: "https://x.com/bmgblogs" },
+    { name: "X", url: "https://x.com/newLQB" },
   ],
 };
