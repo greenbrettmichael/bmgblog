@@ -1,0 +1,12 @@
+---
+layout: layouts/base.njk
+---
+<article>
+  <header>
+    <h1>{{ title }}</h1>
+    <p class="meta"><time datetime="{{ page.date | isoDate }}">{{ page.date | longDate }}</time>{% if draft %} · <strong>draft</strong>{% endif %}</p>
+    {% if description %}<p class="lede">{{ description }}</p>{% endif %}
+    {% if app %}<p><a class="launch" href="{{ app }}">Launch ↗</a></p>{% endif %}
+  </header>
+  {{ content | safe }}
+</article>

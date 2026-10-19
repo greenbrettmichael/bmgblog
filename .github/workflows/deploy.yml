@@ -1,0 +1,52 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+
+      - name: Deploy to production
+        if: github.event_name != 'pull_request'
+        run: npx wrangler deploy --message "${{ github.sha }}"
+
+      # Uploads a version without routing traffic to it and gives it a stable
+      # URL: https://pr-<number>-bmgblog.<account>.workers.dev
+      - name: Upload preview
+        if: github.event_name == 'pull_request'
+        id: preview
+        run: |
+          npx wrangler versions upload --preview-alias "pr-${{ github.event.number }}" \
+            --message "PR #${{ github.event.number }} ${{ github.event.pull_request.head.sha }}" | tee upload.log
+          echo "url=$(grep -oE 'https://pr-[^ ]+\.workers\.dev' upload.log | head -1)" >> "$GITHUB_OUTPUT"
+
+      - name: Comment preview URL
+        if: github.event_name == 'pull_request' && steps.preview.outputs.url != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BODY: "Preview: ${{ steps.preview.outputs.url }}"
+        run: |
+          gh pr comment "${{ github.event.number }}" --edit-last --body "$BODY" \
+            || gh pr comment "${{ github.event.number }}" --body "$BODY"

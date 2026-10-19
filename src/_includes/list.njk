@@ -1,0 +1,10 @@
+<ul class="list">
+  {%- for item in items %}
+  <li>
+    <time datetime="{{ item.date | isoDate }}">{{ item.date | isoDate }}</time>
+    <a href="{{ item.url }}">{{ item.data.title }}</a>
+  </li>
+  {%- else %}
+  <li>Nothing here yet.</li>
+  {%- endfor %}
+</ul>

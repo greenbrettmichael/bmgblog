@@ -1,16 +1,12 @@
 ---
-title: Home
-layout: base.njk
+layout: layouts/base.njk
 ---
-<h2>Welcome!</h2>
-<p>This is my personal blog. I post long form content here to link elsewhere. </p>
-<a href="https://github.com/greenbrettmichael">github</a>
-<a href="https://www.linkedin.com/in/brett-michael-green/">linkedin</a>
-<a href="https://x.com/bmgblogs">x</a>
+<p class="lede">{{ site.description }}</p>
 
-<h3>Latest posts</h3>
-<ul>
-  {%- for post in collections.post | reverse -%}
-    <li><a href="{{ post.url }}">{{ post.data.title }}</a></li>
-  {%- endfor -%}
-</ul>
+<h2>Recent posts</h2>
+{% set items = collections.posts | reverse | head(5) %}
+{% include "list.njk" %}
+
+<h2>Projects</h2>
+{% set items = collections.projects | reverse %}
+{% include "list.njk" %}

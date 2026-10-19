@@ -1,8 +1,0 @@
-name = "bmgblog"
-compatibility_date = "2025-07-09"
-
-[build]
-command = "npm run build"
-
-[assets]
-directory = "./_site"

@@ -1,0 +1,8 @@
+---
+layout: layouts/base.njk
+title: Projects
+permalink: /projects/
+---
+<h1>Projects</h1>
+{% set items = collections.projects | reverse %}
+{% include "list.njk" %}

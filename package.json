@@ -1,15 +1,25 @@
 {
   "name": "bmgblog",
   "private": true,
+  "type": "module",
   "scripts": {
-    "build": "eleventy",
-    "start": "eleventy --serve --port=8080"
-  },
-  "devDependencies": {
-    "@11ty/eleventy": "3.1.2",
-    "wrangler": "^4.24.0"
+    "dev": "eleventy --serve --port=8080",
+    "build": "node -e \"fs.rmSync('_site',{recursive:true,force:true})\" && eleventy",
+    "preview": "npm run build && wrangler dev",
+    "deploy": "npm run build && wrangler deploy",
+    "new": "node scripts/new.mjs",
+    "r2:put": "node scripts/r2-put.mjs"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "3.1.7",
+    "@11ty/eleventy-img": "7.0.0",
+    "wrangler": "4.151.2"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true,
+    "workerd@1.20261019.1": true
   }
 }
