@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Audio Converter</title>
+  <meta name="description" content="Convert audio files to MP3, AAC, FLAC, WAV, Opus and more, entirely in your browser. Nothing is uploaded.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%231a5fb4' d='M3 10h2v4H3zm4-4h2v12H7zm4-3h2v18h-2zm4 5h2v8h-2zm4 2h2v4h-2z'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <header class="top">
+    <a class="back" href="/projects/audio-converter/">← About this project</a>
+  </header>
+
+  <main>
+    <h1>Audio Converter</h1>
+    <p class="lede">
+      Convert audio between MP3, AAC, FLAC, WAV, Opus and more. Conversion runs in your browser
+      with FFmpeg compiled to WebAssembly: <strong>your files are never uploaded</strong>.
+    </p>
+
+    <section class="panel" aria-labelledby="settings-heading">
+      <h2 id="settings-heading">Output</h2>
+      <div class="grid">
+        <label>Format
+          <select id="format"></select>
+        </label>
+        <label id="quality-field">
+          <span id="quality-label">Quality</span>
+          <select id="quality"></select>
+        </label>
+        <label>Channels
+          <select id="channels"></select>
+        </label>
+        <label>Sample rate
+          <select id="sample-rate"></select>
+        </label>
+        <label>Volume
+          <select id="volume">
+            <option value="">Unchanged</option>
+            <option value="normalize">Normalize loudness</option>
+            <option value="gain">Adjust gain…</option>
+          </select>
+        </label>
+        <label id="gain-field" hidden>Gain (dB)
+          <input id="gain" type="number" step="0.5" min="-60" max="60" value="0" inputmode="decimal">
+        </label>
+        <label>Trim start
+          <input id="start" type="text" placeholder="0:00" inputmode="decimal" autocomplete="off">
+        </label>
+        <label>Trim end
+          <input id="end" type="text" placeholder="end" inputmode="decimal" autocomplete="off">
+        </label>
+      </div>
+      <p id="settings-error" class="error" role="alert" hidden></p>
+    </section>
+
+    <label id="drop" class="drop">
+      <input id="picker" type="file" accept="audio/*,video/*,.opus,.flac,.m4a,.aac,.wma,.aiff,.aif,.ac3,.amr,.mka" multiple>
+      <span class="drop-title">Drop audio or video files here</span>
+      <span class="drop-sub">or click to choose · audio is extracted from video files</span>
+    </label>
+
+    <ul id="files" class="files" aria-live="polite"></ul>
+
+    <div class="actions">
+      <button id="convert" class="primary" disabled>Convert</button>
+      <button id="cancel" hidden>Cancel</button>
+      <button id="zip" disabled>Download all (.zip)</button>
+      <button id="clear" class="quiet" disabled>Clear list</button>
+      <span id="engine" class="engine" role="status">Loading converter…</span>
+    </div>
+  </main>
+
+  <footer class="bottom">
+    Powered by <a href="https://ffmpeg.org/">FFmpeg</a> via <a href="https://github.com/ffmpegwasm/ffmpeg.wasm">ffmpeg.wasm</a>
+    (GPL-2.0-or-later). <a href="https://github.com/greenbrettmichael/bmgblog/tree/main/apps/audio-converter">Source</a>.
+  </footer>
+</body>
+</html>

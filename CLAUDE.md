@@ -37,7 +37,8 @@ Front matter: `title`, `date` (YYYY-MM-DD), optional `description`, `draft: true
 
 ## WebAssembly projects
 
-1. Build the app in its own repo (Emscripten, Rust/wasm-bindgen, Godot, Unity, …). The output folder must have `index.html`.
+1. Build the app, either in its own repo or here under `apps/<slug>/` (source only; `dist/` and `node_modules/`
+   are gitignored). The output folder must have `index.html`.
 2. `npm run r2:put -- <build-dir> apps/<slug>`. It sets `Content-Type` (`application/wasm` etc.) and, for
    `*.br`/`*.gz` files, `Content-Encoding`, so precompressed builds work. Max 300 MiB per file via wrangler.
 3. `npm run new -- --project "Title"`, write it up, set `draft: false`.
@@ -45,6 +46,13 @@ Front matter: `title`, `date` (YYYY-MM-DD), optional `description`, `draft: true
 `/apps/*` responses are sent with COOP/COEP headers (cross-origin isolated), so SharedArrayBuffer/threads work,
 but the app can't load cross-origin resources that lack CORS/CORP headers. Keep everything inside the app folder.
 Threaded apps only get isolation when opened directly, not inside an `<iframe>` on a post.
+
+Existing apps:
+
+- `apps/audio-converter/` — ffmpeg.wasm audio converter, plain ES modules, no bundler.
+  Build: `cd apps/audio-converter && npm ci && npm run build` (~1 min, Brotli-compresses the wasm).
+  Publish: `npm run r2:put -- apps/audio-converter/dist apps/audio-converter` from the repo root.
+  The app's back link points at `/projects/audio-converter/`.
 
 R2 uploads go live immediately and are independent of site deploys. Re-uploading overwrites but never deletes
 stale files; use a new slug (e.g. `apps/<slug>-v2`) if the file set changes substantially.
